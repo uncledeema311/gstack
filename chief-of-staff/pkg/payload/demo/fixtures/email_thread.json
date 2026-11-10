@@ -1,0 +1,19 @@
+{
+  "synthetic": true,
+  "ref": "gmail:thread:demo-thr-3001",
+  "subject": "Walkthrough next week",
+  "messages": [
+    {
+      "date": "2026-10-28T14:12:00+11:00",
+      "from": "Nic <nic@example.com>",
+      "to": ["Priya Raman <priya.raman@kestrelridge.example.com>"],
+      "body": "Hi Priya, good to speak today. Happy to walk you and Tom through the platform. Does Thursday 12 November at 10am Melbourne time suit?"
+    },
+    {
+      "date": "2026-10-29T09:40:00+08:00",
+      "from": "Priya Raman <priya.raman@kestrelridge.example.com>",
+      "to": ["Nic <nic@example.com>"],
+      "body": "Thursday works, that is 7am for us in Perth so let's keep it tight. Main thing I want to understand is how this reduces the manual work around our quarterly updates, and what it costs. We have a board meeting on 3 December."
+    }
+  ]
+}

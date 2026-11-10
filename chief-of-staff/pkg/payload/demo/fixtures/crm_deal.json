@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "ref": "hubspot:deal:demo-deal-1001",
+  "company": {"ref": "hubspot:company:demo-co-501", "name": "Kestrel Ridge Minerals", "city": "Perth", "timezone": "Australia/Perth"},
+  "deal": {
+    "name": "Kestrel Ridge Minerals - investor hub",
+    "stage": "Demo scheduled",
+    "valid_stages": ["Discovery", "Demo scheduled", "Demo completed", "Proposal sent", "Negotiation", "Closed won", "Closed lost"],
+    "amount": 48000,
+    "currency": "AUD",
+    "close_date": "2026-12-18",
+    "owner": "Nic",
+    "last_activity": "2026-10-29",
+    "next_step": null
+  },
+  "contacts": [
+    {"ref": "hubspot:contact:demo-ct-901", "name": "Priya Raman", "role": "Chief Financial Officer", "email": "priya.raman@kestrelridge.example.com"},
+    {"ref": "hubspot:contact:demo-ct-902", "name": "Tom Whitlock", "role": "Investor Relations Manager", "email": "tom.whitlock@kestrelridge.example.com"}
+  ]
+}
