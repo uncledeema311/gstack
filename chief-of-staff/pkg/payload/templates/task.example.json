@@ -1,0 +1,20 @@
+{
+  "id": "T-0001",
+  "kind": "commitment",
+  "company": "Example Pty Ltd",
+  "action": "Send the three-tier pricing summary",
+  "owner": "Nic",
+  "source": {"type": "transcript", "ref": "fathom:recording:EXAMPLE", "url": null},
+  "deadline": {"date": "2026-11-13", "kind": "explicit"},
+  "priority": "high",
+  "priority_rationale": "Promised in the meeting and needed for their board paper",
+  "status": "proposed",
+  "waiting_on": null,
+  "blocker": null,
+  "evidence": null,
+  "decision_id": "DE-0001",
+  "dedupe_key": "0123456789abcdef",
+  "created_at": "2026-11-12T00:30:00Z",
+  "updated_at": "2026-11-12T00:30:00Z",
+  "history": [{"at": "2026-11-12T00:30:00Z", "from": null, "to": "proposed", "note": "created"}]
+}

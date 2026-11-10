@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "profile": {
+    "name": "Nic",
+    "role": "Account Executive and pod lead",
+    "company": "InvestorHub",
+    "city": "Melbourne",
+    "language": "en-AU"
+  },
+  "timezone": "Australia/Melbourne",
+  "working_hours": {
+    "start": "08:30",
+    "end": "17:30",
+    "days": [
+      "mon",
+      "tue",
+      "wed",
+      "thu",
+      "fri"
+    ]
+  },
+  "scheduling": {
+    "buffer_minutes": 15,
+    "default_duration_minutes": 30,
+    "slot_step_minutes": 30,
+    "min_notice_hours": 4,
+    "attendee_day_start": "08:00",
+    "attendee_day_end": "18:00"
+  },
+  "staleness_days": {
+    "preferences": null,
+    "reference": 180,
+    "people": 180,
+    "companies": 180,
+    "opportunities": 14,
+    "decisions": null,
+    "notes": 7
+  },
+  "permissions": {
+    "no_approval": [
+      "gmail_draft",
+      "crm_note_draft",
+      "doc_draft",
+      "slack_draft",
+      "calendar_proposal"
+    ],
+    "approval_required": [
+      "email_send",
+      "calendar_invite",
+      "calendar_event_change",
+      "crm_write",
+      "slack_send"
+    ],
+    "never": [
+      "purchase",
+      "record_delete",
+      "permission_change"
+    ],
+    "approval_expiry_hours": 12
+  },
+  "connectors": {
+    "gmail": {
+      "status": "unknown",
+      "via": "",
+      "checked_at": null,
+      "evidence": ""
+    },
+    "calendar": {
+      "status": "unknown",
+      "via": "",
+      "checked_at": null,
+      "evidence": ""
+    },
+    "hubspot": {
+      "status": "unknown",
+      "via": "",
+      "checked_at": null,
+      "evidence": ""
+    },
+    "drive": {
+      "status": "unknown",
+      "via": "",
+      "checked_at": null,
+      "evidence": ""
+    },
+    "slack": {
+      "status": "unknown",
+      "via": "",
+      "checked_at": null,
+      "evidence": ""
+    },
+    "transcripts": {
+      "status": "unknown",
+      "via": "",
+      "checked_at": null,
+      "evidence": ""
+    }
+  },
+  "transcript_provider": "unknown",
+  "routines": {
+    "morning": {
+      "enabled": false,
+      "time": null,
+      "timezone": null,
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ],
+      "deliver_to": null,
+      "schedule_confirmed_at": null
+    },
+    "afternoon": {
+      "enabled": false,
+      "time": null,
+      "timezone": null,
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ],
+      "deliver_to": null,
+      "schedule_confirmed_at": null
+    },
+    "weekly": {
+      "enabled": false,
+      "time": null,
+      "timezone": null,
+      "days": [
+        "fri"
+      ],
+      "deliver_to": null,
+      "schedule_confirmed_at": null
+    }
+  },
+  "feedback": {
+    "promotion_min_evidence": 2
+  },
+  "context": {
+    "max_bundle_items": 25
+  }
+}

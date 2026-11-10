@@ -1,0 +1,18 @@
+{
+  "id": "PE-0001",
+  "category": "people",
+  "kind": null,
+  "subject": "Example Person",
+  "attribute": "role",
+  "value": "Chief Financial Officer",
+  "related": ["Example Pty Ltd"],
+  "source": {"type": "hubspot", "ref": "hubspot:contact:EXAMPLE", "url": null},
+  "observed_on": "2026-11-12",
+  "verification": "verified",
+  "verified_at": "2026-11-12T00:30:00Z",
+  "status": "active",
+  "superseded_by": null,
+  "expires_on": null,
+  "recorded_at": "2026-11-12T00:30:00Z",
+  "updated_at": "2026-11-12T00:30:00Z"
+}
