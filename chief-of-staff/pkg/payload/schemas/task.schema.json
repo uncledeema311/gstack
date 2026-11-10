@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "task",
+  "description": "One item in the task queue.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "company",
+    "action",
+    "owner",
+    "source",
+    "deadline",
+    "priority",
+    "priority_rationale",
+    "status",
+    "evidence",
+    "dedupe_key",
+    "created_at",
+    "updated_at",
+    "history"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^T-[0-9]{4,}$",
+      "description": "Stable identifier."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "task",
+        "commitment"
+      ]
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Company or project."
+    },
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Specific next action."
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type",
+        "ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "also_seen_in": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "deadline": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "date",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "description": "explicit = stated in the source. suggested = proposed by the assistant.",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "explicit",
+            "suggested"
+          ]
+        }
+      }
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "priority_rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "drafted",
+        "awaiting_approval",
+        "in_progress",
+        "waiting_on_other",
+        "completed",
+        "blocked"
+      ]
+    },
+    "waiting_on": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "blocker": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "text",
+        "recorded_at"
+      ],
+      "additionalProperties": false,
+      "description": "Evidence of completion. Required when status is completed.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "decision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dedupe_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "at",
+          "to"
+        ]
+      }
+    }
+  }
+}

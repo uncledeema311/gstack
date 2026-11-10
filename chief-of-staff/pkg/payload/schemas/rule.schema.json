@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "rule",
+  "description": "A versioned reusable instruction learned from feedback.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "text",
+    "reason",
+    "evidence",
+    "status",
+    "added_in_version",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^R-[0-9]{4,}$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "style",
+        "format",
+        "workflow",
+        "retrieval"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "basis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "reverted"
+      ]
+    },
+    "added_in_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reverted_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

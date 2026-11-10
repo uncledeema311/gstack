@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "feedback",
+  "description": "One piece of feedback from the user.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "text",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^F-[0-9]{4,}$"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "task_correction",
+        "factual_update",
+        "durable_preference",
+        "workflow_change"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "theme": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "explicit_standing": {
+      "type": "boolean"
+    },
+    "promoted_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

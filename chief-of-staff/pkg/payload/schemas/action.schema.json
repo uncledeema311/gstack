@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "action",
+  "description": "One outward-facing action in the ledger.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "key",
+    "type",
+    "class",
+    "target",
+    "summary",
+    "status",
+    "attempts",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "key": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Idempotency key."
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "class": {
+      "type": "string",
+      "enum": [
+        "no_approval",
+        "approval_required"
+      ]
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "approval_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "confirmed",
+        "failed"
+      ]
+    },
+    "system_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Reference returned by the system. Required before reporting as done."
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "approval",
+  "description": "A single-use approval given by the user.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "action_type",
+    "target",
+    "quote",
+    "granted_at",
+    "expires_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^A-[0-9]{4,}$"
+    },
+    "action_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "quote": {
+      "type": "string",
+      "minLength": 1
+    },
+    "granted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "used_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

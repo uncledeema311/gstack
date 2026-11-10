@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "context",
+  "description": "One fact in persistent context.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "category",
+    "subject",
+    "value",
+    "source",
+    "observed_on",
+    "verification",
+    "status",
+    "recorded_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(PF|RF|PE|CO|OP|DE|NO)-[0-9]{4,}$"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "preferences",
+        "reference",
+        "people",
+        "companies",
+        "opportunities",
+        "decisions",
+        "notes"
+      ]
+    },
+    "kind": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "decision",
+        "commitment",
+        null
+      ]
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attribute": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "value": {
+      "type": "string",
+      "minLength": 1
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type",
+        "ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "observed_on": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the source showed this to be true."
+    },
+    "verification": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "unverified"
+      ]
+    },
+    "verified_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "superseded",
+        "retired"
+      ]
+    },
+    "superseded_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "retired_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "expires_on": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
