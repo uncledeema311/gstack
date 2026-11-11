@@ -7,7 +7,7 @@ This ZIP installs a personal chief of staff for Codex on macOS: one workspace fo
 1. Open Terminal and go to the extracted folder:
 
    ```bash
-   cd ~/Downloads/chief-of-staff-codex-1.0.0
+   cd ~/Downloads/chief-of-staff-codex-1.0.1
    ```
 
 2. Install (creates `~/ChiefOfStaff`, changes nothing else on your Mac):

@@ -16,15 +16,15 @@ If `python3` is missing or opens a prompt about developer tools, run `xcode-sele
 1. Extract the ZIP. Double-click it in Finder, or:
 
    ```bash
-   cd ~/Downloads && unzip chief-of-staff-codex-1.0.0.zip
+   cd ~/Downloads && unzip chief-of-staff-codex-1.0.1.zip
    ```
 
-   Expected: a folder `chief-of-staff-codex-1.0.0` containing `START_HERE.md`, `install.sh`, `manifest.json`, `payload/`, `installer/` and `tests/`.
+   Expected: a folder `chief-of-staff-codex-1.0.1` containing `START_HERE.md`, `install.sh`, `manifest.json`, `payload/`, `installer/` and `tests/`.
 
 2. Preview what will happen (optional, changes nothing):
 
    ```bash
-   cd ~/Downloads/chief-of-staff-codex-1.0.0
+   cd ~/Downloads/chief-of-staff-codex-1.0.1
    bash install.sh --dry-run
    ```
 
@@ -39,7 +39,7 @@ If `python3` is missing or opens a prompt about developer tools, run `xcode-sele
    Expected output:
 
    ```
-   Installed chief of staff 1.0.0 in /Users/<you>/ChiefOfStaff
+   Installed chief of staff 1.0.1 in /Users/<you>/ChiefOfStaff
      files: 62 added, 0 updated, 0 unchanged, 0 removed
      config: created from example
      data: created empty
