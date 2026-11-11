@@ -207,7 +207,7 @@ class Consistency(unittest.TestCase):
                      "installer/cos_install.py", "tests/run_all.sh", "payload/docs/CONNECTORS.md",
                      "payload/docs/ROUTINES.md", "payload/docs/FIRST_RUN.md", "payload/docs/STATE.md",
                      "payload/docs/SKILLS_INDEX.md", "payload/config/cos.config.example.json",
-                     "payload/config/codex-mcp.example.toml", "payload/demo/walkthrough.sh"):
+                     "payload/config/codex-config.example.toml", "payload/demo/walkthrough.sh"):
             self.assertTrue((PKG / name).exists(), name)
 
     def test_install_document_states_the_real_file_count(self):
@@ -262,6 +262,21 @@ class Consistency(unittest.TestCase):
                             continue
                         self.assertIn('"%s"' % flag, source, "%s documents unknown installer flag %s"
                                       % (path.relative_to(PKG), flag))
+
+    def test_approve_is_never_presented_as_asking_first(self):
+        # In Codex, approval_mode "approve" runs a tool WITHOUT asking. Recommending it would be unsafe.
+        for path, text in text_files():
+            if "tests" in path.parts or path.name == "CHANGELOG.md":  # the changelog describes the fix
+                continue
+            for line in text.splitlines():
+                self.assertIsNone(re.search(r'approval_mode\s*=\s*"approve"', line),
+                                  "%s recommends approval_mode approve: %s" % (path.relative_to(PKG), line.strip()))
+        example = (PAYLOAD / "config" / "codex-config.example.toml").read_text()
+        active = [line.strip() for line in example.splitlines() if line.strip() and not line.strip().startswith("#")]
+        self.assertEqual(active, ["[apps._default]", 'default_tools_approval_mode = "writes"', "destructive_enabled = false"])
+        guide = (PAYLOAD / "docs" / "CONNECTORS.md").read_text()
+        self.assertIn("| `approve` | Run without asking.", guide)
+        self.assertIn("| `prompt` | Always ask before the tool runs |", guide)
 
     def test_routine_prompts_are_read_only_and_reference_real_skills(self):
         names = {path.name for path in SKILLS.iterdir()}

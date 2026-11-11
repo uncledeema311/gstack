@@ -8,7 +8,7 @@ import time
 import unittest
 from pathlib import Path
 
-from helper import HAS_MANIFEST, PKG, Workspace, base_env, installer, run
+from helper import HAS_MANIFEST, PKG, VERSION, Workspace, base_env, installer, run
 
 SKILL = ".agents/skills/cos-daily-brief/SKILL.md"
 
@@ -63,7 +63,7 @@ class FreshInstall(TempCase):
         self.assertEqual(len(skills), 10)
         self.assertTrue(all((self.ws / ".agents" / "skills" / name / "SKILL.md").exists() for name in skills))
         self.assertTrue(os.access(str(self.ws / "bin" / "cos"), os.X_OK))
-        self.assertIn("COS-CORE-INSTRUCTIONS package 1.0.0", (self.ws / "AGENTS.md").read_text())
+        self.assertIn("COS-CORE-INSTRUCTIONS package %s" % VERSION, (self.ws / "AGENTS.md").read_text())
         self.assertLess((self.ws / "AGENTS.md").stat().st_size, 32 * 1024)
         self.assertEqual(self.cos("doctor")[0], 0)
         self.assertEqual(self.cos("task", "list")[1]["count"], 0)
@@ -170,7 +170,7 @@ class FreshInstall(TempCase):
         env = base_env()
         code, out, err = run(["bash", PKG / "install.sh", "--workspace", self.ws], env=env)
         self.assertEqual(code, 0, out + err)
-        self.assertIn("Installed chief of staff 1.0.0", out)
+        self.assertIn("Installed chief of staff %s" % VERSION, out)
         self.assertIn("health check: passed", out)
         code, out, err = run(["bash", PKG / "verify.sh", "--workspace", self.ws, "--no-codex"], env=env)
         self.assertEqual(code, 0, out + err)
@@ -217,7 +217,7 @@ class UpgradeRollbackUninstall(TempCase):
     def test_upgrade_replaces_package_files_and_preserves_everything_of_yours(self):
         self.assertIn("OLD-VERSION-MARKER", (self.ws / SKILL).read_text())
         summary = self.upgrade()
-        self.assertEqual((summary["mode"], summary["previous_version"], summary["version"]), ("upgrade", "0.9.0", "1.0.0"))
+        self.assertEqual((summary["mode"], summary["previous_version"], summary["version"]), ("upgrade", "0.9.0", VERSION))
         self.assertTrue(summary["healthy"])
         self.assertNotIn("OLD-VERSION-MARKER", (self.ws / SKILL).read_text())
         self.assertFalse((self.ws / "templates" / "old-only.md").exists())
@@ -226,9 +226,9 @@ class UpgradeRollbackUninstall(TempCase):
             self.assertEqual(after[rel], data, "%s changed during upgrade" % rel)
         self.assertEqual(self.cos("config", "get", "timezone")[1]["value"], "Australia/Perth")
         self.assertEqual(self.cos("task", "show", "T-0001")[1]["task"]["action"], "Send pricing")
-        self.assertEqual(self.cos("version")[1]["version"], "1.0.0")
+        self.assertEqual(self.cos("version")[1]["version"], VERSION)
         agents = (self.ws / "AGENTS.md").read_text()
-        self.assertIn("package 1.0.0", agents)
+        self.assertIn("package %s" % VERSION, agents)
         self.assertIn("Keep follow-up emails under 120 words.", agents)
         self.assertIn("Sign off with 'Cheers, Nic'.", agents)
         self.assertIn("Time zone: Australia/Perth", agents)
@@ -241,14 +241,14 @@ class UpgradeRollbackUninstall(TempCase):
         shutil.copytree(str(PKG), str(newer), ignore=shutil.ignore_patterns("__pycache__"))
         if (newer / "manifest.json").exists():
             (newer / "manifest.json").unlink()
-        (newer / "payload" / "templates" / "crm-note.md").write_text(old_pkg_note.read_text() + "\nNEW LINE IN 1.0.0\n")
+        (newer / "payload" / "templates" / "crm-note.md").write_text(old_pkg_note.read_text() + "\nNEW LINE IN THE NEWER BUILD\n")
         code, summary = self.install(pkg=newer, env=OLD_ENV)
         self.assertEqual(code, 0, summary)
         self.assertEqual(summary["kept_your_version"], ["templates/crm-note.md"])
         self.assertEqual((self.ws / "templates" / "crm-note.md").read_text(), "MY OWN NOTE SHAPE\n")
-        self.assertIn("NEW LINE IN 1.0.0", (self.ws / "templates" / "crm-note.md.new").read_text())
+        self.assertIn("NEW LINE IN THE NEWER BUILD", (self.ws / "templates" / "crm-note.md.new").read_text())
         code, summary = self.install("--overwrite-modified", pkg=newer, env=OLD_ENV)
-        self.assertIn("NEW LINE IN 1.0.0", (self.ws / "templates" / "crm-note.md").read_text())
+        self.assertIn("NEW LINE IN THE NEWER BUILD", (self.ws / "templates" / "crm-note.md").read_text())
 
     def test_upgrade_makes_a_backup_with_a_data_snapshot(self):
         summary = self.upgrade()
@@ -264,7 +264,7 @@ class UpgradeRollbackUninstall(TempCase):
         code, summary = self.install(pkg=self.old, env=OLD_ENV)
         self.assertEqual(code, 1)
         self.assertIn("rollback", summary["error"])
-        self.assertEqual(self.cos("version")[1]["version"], "1.0.0")
+        self.assertEqual(self.cos("version")[1]["version"], VERSION)
 
     def test_rollback_restores_the_previous_version_and_keeps_current_data(self):
         self.upgrade()
@@ -272,7 +272,7 @@ class UpgradeRollbackUninstall(TempCase):
                  "--source-type", "user", "--source-ref", "user:y", "--priority", "low", "--rationale", "r")
         code, summary = installer("rollback", self.ws)
         self.assertEqual(code, 0, summary)
-        self.assertEqual((summary["from_version"], summary["to_version"]), ("1.0.0", "0.9.0"))
+        self.assertEqual((summary["from_version"], summary["to_version"]), (VERSION, "0.9.0"))
         self.assertTrue(summary["healthy"])
         self.assertIn("OLD-VERSION-MARKER", (self.ws / SKILL).read_text())
         self.assertTrue((self.ws / "templates" / "old-only.md").exists())
@@ -350,7 +350,7 @@ class UpgradeRollbackUninstall(TempCase):
     def test_status_reports_version_and_your_modifications(self):
         self.upgrade()
         code, status = installer("status", self.ws)
-        self.assertEqual((status["version"], status["modified_by_you"]), ("1.0.0", ["templates/crm-note.md"]))
+        self.assertEqual((status["version"], status["modified_by_you"]), (VERSION, ["templates/crm-note.md"]))
         self.assertEqual(len(status["backups"]), 1)
         self.assertEqual([entry["action"] for entry in status["history"]], ["fresh", "upgrade"])
 

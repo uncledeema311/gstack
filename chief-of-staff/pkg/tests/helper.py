@@ -12,6 +12,7 @@ from pathlib import Path
 PKG = Path(__file__).resolve().parent.parent
 INSTALLER = PKG / "installer" / "cos_install.py"
 HAS_MANIFEST = (PKG / "manifest.json").exists()
+VERSION = (PKG / "VERSION").read_text().strip()
 NOW = "2026-11-12T00:50:00Z"  # Thursday 12 Nov 2026, 11:50 in Melbourne (AEDT, +11:00)
 
 
