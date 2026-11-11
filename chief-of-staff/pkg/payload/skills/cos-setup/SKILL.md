@@ -26,11 +26,11 @@ Shared rules are in AGENTS.md. This skill adds procedure only.
 
 For each of gmail, calendar, hubspot, drive, slack and transcripts:
 
-1. Look at the tools available to you in this session. If no tool for that system exists, record `bin/cos connector set NAME --status unavailable --via "no tool in this session"`. Point the user to docs/CONNECTORS.md.
+1. Look at the tools available to you in this session. Tools from ChatGPT apps and plugins carry the app name as a prefix, for example `gmail.create_draft` or `hubspot.search_crm_objects`. A system counts as present if any tool with its prefix exists. If no tool for that system exists, record `bin/cos connector set NAME --status unavailable --via "no tool in this session"`. Point the user to docs/CONNECTORS.md.
 2. If a tool exists, make one small read-only call that reveals no content beyond what is needed: the user's own profile or identity, the list of calendars, or a single most-recent item's metadata.
 3. On success: `bin/cos connector set NAME --status connected --via "<plugin or MCP server name>" --evidence "<what call succeeded>"`. For transcripts add `--provider fathom` or `--provider granola`.
 4. On failure: record `unavailable` with the error as evidence. Do not retry more than once.
-5. Note for the user which connectors expose send or write tools, and remind them of docs/CONNECTORS.md for blocking those tools in Codex settings.
+5. Note for the user which connectors expose send or write tools, and whether a draft tool exists for email. Remind them of docs/CONNECTORS.md step 2: the approval settings in their Codex config that make Codex ask before any write. You cannot confirm those settings yourself, so ask whether they are in place.
 
 Never test a connector by sending, creating, editing or deleting anything.
 

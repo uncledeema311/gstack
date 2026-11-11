@@ -15,47 +15,64 @@ Nothing here has been tested against your Codex account. Treat the steps as the 
 | Slack | Mentions, direct requests | Skipped in briefs |
 | Fathom or Granola | Meeting transcripts | Paste the transcript or three lines of notes |
 
-## Step 1: connect each system in Codex
+## Step 1: see what Codex can already reach
 
-Two documented routes. Use whichever your account offers for each system.
+Start Codex in the workspace and type `/mcp`. Type `/mcp verbose` for the tool names.
 
-Plugins (ChatGPT desktop app or Codex CLI):
+There are two places a connector can come from, and they look different in that list:
 
-1. In the ChatGPT desktop app open the Plugins tab. In the Codex CLI run `codex`, then type `/plugins`.
-2. Find the plugin for the system, install it, and sign in when asked.
-3. Start a new session so its tools load.
+| Where | How it shows in `/mcp` | How you add it |
+|---|---|---|
+| ChatGPT apps and plugins | All together under `codex_apps`, with tool names prefixed by the app: `gmail.create_draft`, `google_calendar.update_event`, `hubspot.manage_crm_objects`, `slack.slack_edit_message`, `fathom.get_meeting_transcript`, `granola.get_meeting_transcript` | Connect the app in ChatGPT, or install its plugin: the Plugins tab in the ChatGPT desktop app, or `/plugins` in the Codex CLI. Start a new session afterwards |
+| MCP servers you add yourself | Under their own name, for example `fathom` | `codex mcp add <name> --url <address>` with the address from the vendor's documentation, then `codex mcp login <name>` |
 
-MCP servers (for systems without a plugin):
+If a system appears under `codex_apps`, it is connected. You do not need a separate MCP server for it as well. A separate entry for the same system that says `authentication required` is a second, unused route: log in to it with `/mcp login <name>`, or remove it with `codex mcp remove <name>`. Either is fine.
 
-1. Get the MCP server address from that vendor's own documentation.
-2. Add it: `codex mcp add <name> --url <address>`
-3. Sign in if it uses OAuth: `codex mcp login <name>`
-4. Check: `codex mcp list`, or type `/mcp` inside Codex to see the server and its tools.
+Observed on one real account on 11 November 2026 (Codex CLI 0.167.0): Gmail, Google Calendar, Google Drive, HubSpot, Slack, Fathom and Granola were all present under `codex_apps`. Your account may differ.
 
-At build time the Codex plugin documentation named Gmail, Google Drive and Slack plugins. It did not confirm plugins for Google Calendar, HubSpot, Fathom or Granola, so expect to use the vendor's MCP server for those, if one exists for your plan.
+## Step 2: make "ask before writing" a hard rule
 
-## Step 2: make sending impossible, not just disallowed
-
-The instructions tell the assistant to draft and ask. That is a guardrail. To make it a hard limit, restrict the tools in `~/.codex/config.toml`. Tool names differ per connector, so look them up first by typing `/mcp` in Codex.
-
-Hide a tool completely:
+The instructions tell the assistant to draft and ask. That is a guardrail. Codex can enforce it. Add this to `~/.codex/config.toml`, then restart Codex:
 
 ```toml
-[mcp_servers.gmail]
-url = "https://REPLACE-WITH-VENDOR-MCP-URL"
-disabled_tools = ["REPLACE_WITH_SEND_TOOL_NAME"]
+[apps._default]
+default_tools_approval_mode = "writes"
+destructive_enabled = false
 ```
 
-Or keep a tool but always ask first:
+What it does, for every app under `codex_apps`:
+
+- `default_tools_approval_mode = "writes"`: Codex asks you before any tool that is not marked read-only. Reads stay quick. Sending, creating and updating need your yes. You will also be asked before a draft is created, because a draft is a write.
+- `destructive_enabled = false`: tools marked destructive, such as delete, are blocked.
+
+If `~/.codex/config.toml` already has an `[apps._default]` section, add the two lines to it instead of creating a second one.
+
+The four approval values, as Codex implements them:
+
+| Value | Meaning |
+|---|---|
+| `prompt` | Always ask before the tool runs |
+| `writes` | Ask unless the tool is marked read-only |
+| `auto` | Codex decides from the tool's own hints. This is the default |
+| `approve` | Run without asking. Do not use this for anything that sends or writes |
+
+For MCP servers you added yourself the same setting goes under that server, and `disabled_tools` hides a tool completely:
 
 ```toml
-[mcp_servers.calendar.tools.REPLACE_WITH_CREATE_EVENT_TOOL_NAME]
-approval_mode = "approve"
+[mcp_servers.NAME]
+default_tools_approval_mode = "writes"
+disabled_tools = ["REPLACE_WITH_TOOL_NAME"]
 ```
 
-A fuller example is in `config/codex-mcp.example.toml`. It is an example only. The installer never edits `~/.codex/config.toml`. Restart Codex after changing it.
+A fuller example is in `config/codex-config.example.toml`. It is an example only. The installer never edits `~/.codex/config.toml`.
 
-Recommended before you schedule any routine: disable every send, post, create-event and CRM-write tool, because scheduled runs are unattended. Whether tool restrictions can be applied to tools that come from a plugin is not something the documentation confirmed. If you cannot restrict a plugin's send tool, prefer the MCP route for that system, or do not schedule routines.
+Test it before you trust it: after restarting Codex, ask it to create a Gmail draft addressed to yourself. Codex should stop and ask for approval before the draft is created. If it does not ask, the setting is not in effect: check the file for a typo or a duplicate section.
+
+What is verified and what is not: Codex CLI 0.167.0 accepts these settings, and their meaning is taken from the Codex source. Their effect on a live connector was not tested by the package author. `writes` and `destructive_enabled` also depend on each connector marking its tools correctly as read-only or destructive. How an unattended scheduled run behaves when a tool needs approval is not documented, so check the first scheduled run by hand (docs/ROUTINES.md).
+
+## Skills with similar names
+
+Plugins can bring their own skills. The HubSpot plugin, for example, ships skills such as "Pipeline Health" and "Customer Prep". If Codex picks one of those when you wanted the chief of staff, name the skill: `$cos-pipeline-review`, `$cos-meeting-prep`. Type `$` to see the list.
 
 ## Step 3: let the assistant check and record
 

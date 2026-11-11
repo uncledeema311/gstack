@@ -1,6 +1,6 @@
 # Chief of staff for Codex
 
-Version 1.0.0. Target: Codex (Codex CLI and Codex in the ChatGPT desktop app) on macOS.
+Version 1.0.1. Target: Codex (Codex CLI and Codex in the ChatGPT desktop app) on macOS.
 
 A persistent assistant that retrieves work context, identifies commitments and next actions, prepares you for meetings, drafts follow-ups and CRM updates, coordinates scheduling and travel preparation, reviews pipeline health, and improves its reusable instructions from your corrections.
 
@@ -42,7 +42,7 @@ Only mechanisms that Codex documents, each checked against Codex CLI 0.167.0:
 |---|---|
 | Shared instructions | `AGENTS.md` in the project folder, loaded automatically (32 KiB limit; this one is under 10 KiB) |
 | Skills | `.agents/skills/<name>/SKILL.md` in the project folder |
-| Connectors | Plugins or MCP servers that you connect in Codex. The package ships none |
+| Connectors | ChatGPT apps, plugins or MCP servers that you connect in Codex. The package ships none |
 | Persistent state | Files inside the workspace, which Codex's `workspace-write` sandbox can write |
 | Schedules | Scheduled tasks in the ChatGPT desktop app, created by you |
 
@@ -67,7 +67,7 @@ Details: docs/SKILLS_INDEX.md.
 
 - Reading and drafting are allowed. Sending email, sending or changing calendar invitations, writing to the CRM and posting to Slack each need your explicit approval for that specific action. Purchases and deletions are never done.
 - Every outward-facing step is recorded in an action ledger before and after. A step is reported as done only when the system returned a reference. Retries do not repeat confirmed steps.
-- These are instructions plus bookkeeping. They guide the model and make its claims checkable. They do not physically block a connected tool. The hard block is a Codex setting that you apply: see docs/CONNECTORS.md.
+- These are instructions plus bookkeeping. They guide the model and make its claims checkable. They do not physically block a connected tool. The hard rule is three lines in your Codex config that make Codex itself ask before any write: see docs/CONNECTORS.md, step 2.
 - Feedback about quality never widens permissions. The CLI refuses learned rules that try.
 
 ## Requirements

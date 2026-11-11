@@ -33,7 +33,7 @@ Everything that would be a live system. `test_workflow.py` and `demo/walkthrough
 ## What the tests cannot show
 
 - That the model in Codex follows the instructions and skills. Verified separately: Codex loads them (`bash verify.sh`).
-- That your connectors work in Codex. Run `cos-setup` inside Codex.
+- That your connectors work in Codex, or that the approval settings in docs/CONNECTORS.md take effect on them. Run `cos-setup` inside Codex and try the draft test in that guide.
 - Behaviour on macOS, until you run the tests there.
 
 The release test report shipped alongside the ZIP records what passed, failed and was not tested for this build.

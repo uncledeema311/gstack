@@ -1,0 +1,40 @@
+# Example Codex settings for the chief of staff: make "ask before writing" a hard rule.
+#
+# This file is an EXAMPLE. The installer does not apply it and never edits
+# ~/.codex/config.toml. Copy the part you need into ~/.codex/config.toml
+# yourself, then restart Codex. See docs/CONNECTORS.md.
+#
+# The approval values, as implemented in Codex (checked against Codex CLI 0.167.0
+# and the Codex source):
+#   "prompt"   always ask you before the tool runs
+#   "writes"   ask you unless the tool is marked read-only
+#   "auto"     Codex decides from the tool's own hints (the default)
+#   "approve"  run WITHOUT asking. Never use this for a tool that sends or writes.
+
+# ---------------------------------------------------------------------------
+# Part 1. Connectors that arrive through ChatGPT apps and plugins.
+# In /mcp these show up under "codex_apps", with tool names like
+# gmail.create_draft or hubspot.manage_crm_objects.
+# This block needs no tool names and covers every app at once.
+# ---------------------------------------------------------------------------
+
+[apps._default]
+# Ask before any app tool that is not marked read-only (send, create, update).
+default_tools_approval_mode = "writes"
+# Block tools that are marked destructive (delete and similar) outright.
+destructive_enabled = false
+
+# Optional, stricter for one app: ask before every call, reads included.
+# The id is the app's name as it prefixes its tools in /mcp (gmail, hubspot, slack).
+# [apps.gmail]
+# default_tools_approval_mode = "prompt"
+
+# ---------------------------------------------------------------------------
+# Part 2. Connectors you added yourself with `codex mcp add`.
+# These show up in /mcp under their own name. Replace NAME with that name.
+# ---------------------------------------------------------------------------
+
+# [mcp_servers.NAME]
+# default_tools_approval_mode = "writes"
+# # To hide a tool completely, list its exact name as shown by /mcp verbose:
+# disabled_tools = ["REPLACE_WITH_TOOL_NAME"]
