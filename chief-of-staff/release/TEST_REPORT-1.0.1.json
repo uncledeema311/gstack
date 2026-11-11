@@ -1,0 +1,405 @@
+{
+  "zip": "chief-of-staff-codex-1.0.1.zip",
+  "sha256": "ab961be2f4a62b767bb53eeb39741936cfea1fe279b25d28860f00383720dd26",
+  "bytes": 153636,
+  "entries": 81,
+  "version": "1.0.1",
+  "when": "2026-11-11T01:10:22+00:00",
+  "platform": "Linux 6.18.44-fc-v338 (x86_64)",
+  "codex": "codex-cli 0.167.0",
+  "results": [
+    [
+      "Archive",
+      "ZIP integrity (CRC of every entry)",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "single top-level folder named chief-of-staff-codex-1.0.1",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "no absolute paths or parent references",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "no compiled, cache, backup or OS junk files",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "extracts with the system unzip tool",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "expected structure present (32 key files)",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "ten skills, each with SKILL.md",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "manifest lists exactly the extracted files, hashes match",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "manifest version matches the file name",
+      "PASS",
+      ""
+    ],
+    [
+      "Archive",
+      "executable bits preserved on scripts",
+      "PASS",
+      ""
+    ],
+    [
+      "Packaged tests",
+      "tests/run_all.sh under Python 3.9.25 (119 tests)",
+      "PASS",
+      ""
+    ],
+    [
+      "Packaged tests",
+      "tests left nothing in HOME (Python 3.9.25)",
+      "PASS",
+      ""
+    ],
+    [
+      "Packaged tests",
+      "tests/run_all.sh under Python 3.13.18 (119 tests)",
+      "PASS",
+      ""
+    ],
+    [
+      "Packaged tests",
+      "tests left nothing in HOME (Python 3.13.18)",
+      "PASS",
+      ""
+    ],
+    [
+      "Install from the extracted ZIP",
+      "install.sh --dry-run changes nothing",
+      "PASS",
+      ""
+    ],
+    [
+      "Install from the extracted ZIP",
+      "bash install.sh into an empty HOME (default ~/ChiefOfStaff)",
+      "PASS",
+      "fOfStaff\n  files: 62 added, 0 updated, 0 unchanged, 0 removed\n  config: created from example\n  data: created empty\n  health check: passed\n\nNext: open /tmp/cos-release-wodwby5e/home/ChiefOfStaff in Codex and say: run cos-setup\n      (terminal: cd /tmp/cos-release-wodwby5e/home/ChiefOfStaff && codex)\n"
+    ],
+    [
+      "Install from the extracted ZIP",
+      "installer output matches INSTALL.md (file count 62)",
+      "PASS",
+      ""
+    ],
+    [
+      "Install from the extracted ZIP",
+      "only ~/ChiefOfStaff was created in HOME",
+      "PASS",
+      ""
+    ],
+    [
+      "Install from the extracted ZIP",
+      "Codex config untouched (CODEX_HOME still empty before verify)",
+      "PASS",
+      ""
+    ],
+    [
+      "Install from the extracted ZIP",
+      "AGENTS.md generated, under the 32 KiB Codex limit (9492 bytes)",
+      "PASS",
+      ""
+    ],
+    [
+      "Install from the extracted ZIP",
+      "second install is a no-op",
+      "PASS",
+      "ata: preserved\n  health check: passed\n\nNext: open /tmp/cos-release-wodwby5e/home/ChiefOfStaff in Codex and say: run cos-setup\n      (terminal: cd /tmp/cos-release-wodwby5e/home/ChiefOfStaff && codex)\n"
+    ],
+    [
+      "Verify",
+      "bash verify.sh --no-codex",
+      "PASS",
+      "ief of staff 1.0.1 in /tmp/cos-release-wodwby5e/home/ChiefOfStaff\n  [PASS] managed files present\n  [PASS] bin/cos doctor\n  [SKIP] Codex discovery: --no-codex\n  note: connectors not checked yet: gmail, calendar, hubspot, drive, slack, transcripts. Run the cos-setup skill inside Codex.\nRESULT: PASSED\n"
+    ],
+    [
+      "Verify",
+      "real Codex CLI (codex-cli 0.167.0) loads AGENTS.md and all 10 skills",
+      "PASS",
+      "Verify chief of staff 1.0.1 in /tmp/cos-release-wodwby5e/home/ChiefOfStaff\n  [PASS] managed files present\n  [PASS] bin/cos doctor\n  [PASS] Codex loads AGENTS.md and all 10 skills\n  note: connectors not checked yet: gmail, calendar, hubspot, drive, slack, transcripts. Run the cos-setup skill inside Codex.\nRESULT: PASSED\n"
+    ],
+    [
+      "Verify",
+      "config/codex-config.example.toml passes strict config parsing in codex-cli 0.167.0",
+      "PASS",
+      "onses, cf-ray: a5896a9a4d8350e5-IAD, request id: req_0bf049d2358e448a879d3ae52700206f\nERROR: unexpected status 401 Unauthorized: Missing bearer or basic authentication in header, url: https://api.openai.com/v1/responses, cf-ray: a5896a9a4d8350e5-IAD, request id: req_0bf049d2358e448a879d3ae52700206f\n"
+    ],
+    [
+      "Verify",
+      "control: the same check rejects an invalid approval value",
+      "PASS",
+      "cos-release-wodwby5e/codex-home\"))\nError loading config.toml:\n/tmp/cos-release-wodwby5e/codex-home/config.toml:23:31: unknown variant `sometimes`, expected one of `auto`, `prompt`, `writes`, `approve`\n   |\n23 | default_tools_approval_mode = \"sometimes\"\n   |                               ^^^^^^^^^^^\n"
+    ],
+    [
+      "Verify",
+      "example config never sets approval to approve (which would run tools without asking)",
+      "PASS",
+      "[apps._default]; default_tools_approval_mode = \"writes\"; destructive_enabled = false"
+    ],
+    [
+      "First-run walkthrough (synthetic data, MOCKED connectors)",
+      "demo/walkthrough.sh completes",
+      "PASS",
+      "aft: hubspot:deal:demo-deal-1001 -> planned \n  context for Kestrel Ridge Minerals: 7 facts, 4 open tasks\n  advice: Some companies facts for Kestrel Ridge Minerals are unverified. Label them as unverified if you use them.\n\nWalkthrough complete. Nothing left this computer. Demo data is in data-demo/.\n"
+    ],
+    [
+      "First-run walkthrough (synthetic data, MOCKED connectors)",
+      "every expected line in FIRST_RUN.md part A appears in the real output (33 lines)",
+      "PASS",
+      ""
+    ],
+    [
+      "First-run walkthrough (synthetic data, MOCKED connectors)",
+      "persistence: a new process reads the 4 demo tasks back",
+      "PASS",
+      ""
+    ],
+    [
+      "First-run walkthrough (synthetic data, MOCKED connectors)",
+      "real data untouched by the demo",
+      "PASS",
+      ""
+    ],
+    [
+      "Uninstall from the extracted ZIP",
+      "bash uninstall.sh removes the package",
+      "PASS",
+      ""
+    ],
+    [
+      "Uninstall from the extracted ZIP",
+      "data and config preserved",
+      "PASS",
+      "config/cos.config.json, data/.lock, data/instructions/custom.md, data/tasks/tasks.json"
+    ],
+    [
+      "Uninstall from the extracted ZIP",
+      "reinstall picks the preserved data back up",
+      "PASS",
+      ""
+    ],
+    [
+      "Uninstall from the extracted ZIP",
+      "uninstall --purge-data --yes leaves nothing behind",
+      "PASS",
+      ""
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "previous release 1.0.0 installs",
+      "PASS",
+      ": 62 added, 0 updated, 0 unchanged, 0 removed\n  config: created from example\n  data: created empty\n  health check: passed\n\nNext: open /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff in Codex and say: run cos-setup\n      (terminal: cd /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff && codex)\n"
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "bash install.sh from 1.0.1 upgrades in place",
+      "PASS",
+      " updated, 52 unchanged, 1 removed\n  config: preserved\n  data: preserved\n  backup of the previous files: /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff/.cos/backups/20261111T011021531677Z-v1.0.0\n  health check: passed\n\nNext: open /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff in Codex and say: run cos-setup\n      (terminal: cd /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff && codex)\n"
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "data and config byte-identical after the upgrade (6 files)",
+      "PASS",
+      ""
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "AGENTS.md regenerated with the new version, the learned rule and the user's time zone",
+      "PASS",
+      ""
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "file dropped by the new version removed, its replacement installed",
+      "PASS",
+      ""
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "bash verify.sh passes after the upgrade",
+      "PASS",
+      "n /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff\n  [PASS] managed files present\n  [PASS] bin/cos doctor\n  [PASS] Codex loads AGENTS.md and all 10 skills\n  note: connectors not checked yet: gmail, calendar, hubspot, drive, slack, transcripts. Run the cos-setup skill inside Codex.\nRESULT: PASSED\n"
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "bash rollback.sh returns to 1.0.0 and keeps the data",
+      "PASS",
+      "Rolled back 1.0.1 -> 1.0.0 in /tmp/cos-release-wodwby5e/home-upgrade/ChiefOfStaff\n  files restored: 10, removed: 1\n  data: kept as it is now\n  health check: passed\n"
+    ],
+    [
+      "Upgrade from released 1.0.0",
+      "upgrade again after the rollback",
+      "PASS",
+      ""
+    ]
+  ],
+  "suites": {
+    "Python 3.9.25": {
+      "total": 119,
+      "ok": true,
+      "modules": {
+        "test_config": {
+          "ok": 10,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_context": {
+          "ok": 11,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_feedback": {
+          "ok": 10,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_installer": {
+          "ok": 22,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_ledger": {
+          "ok": 13,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_package": {
+          "ok": 20,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 1,
+          "failed": []
+        },
+        "test_tasks": {
+          "ok": 12,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_time": {
+          "ok": 11,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_workflow": {
+          "ok": 9,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        }
+      }
+    },
+    "Python 3.13.18": {
+      "total": 119,
+      "ok": true,
+      "modules": {
+        "test_config": {
+          "ok": 10,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_context": {
+          "ok": 11,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_feedback": {
+          "ok": 10,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_installer": {
+          "ok": 22,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_ledger": {
+          "ok": 13,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_package": {
+          "ok": 21,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_tasks": {
+          "ok": 12,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_time": {
+          "ok": 11,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        },
+        "test_workflow": {
+          "ok": 9,
+          "FAIL": 0,
+          "ERROR": 0,
+          "skipped": 0,
+          "failed": []
+        }
+      }
+    }
+  },
+  "install_output": "Installed chief of staff 1.0.1 in /tmp/cos-release-wodwby5e/home/ChiefOfStaff\n  files: 62 added, 0 updated, 0 unchanged, 0 removed\n  config: created from example\n  data: created empty\n  health check: passed\n\nNext: open /tmp/cos-release-wodwby5e/home/ChiefOfStaff in Codex and say: run cos-setup\n      (terminal: cd /tmp/cos-release-wodwby5e/home/ChiefOfStaff && codex)\n"
+}

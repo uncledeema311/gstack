@@ -32,7 +32,7 @@ def record(area, check, ok, detail=""):
 
 def sh(cmd, cwd=None, env=None, timeout=900):
     proc = subprocess.run([str(item) for item in cmd], cwd=str(cwd) if cwd else None, env=env, timeout=timeout,
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                          stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     return proc.returncode, proc.stdout, proc.stderr
 
 
@@ -64,6 +64,7 @@ def main():
     parser.add_argument("--python", action="append", default=[], help="interpreter(s) to run the packaged tests with")
     parser.add_argument("--codex", help="path to the codex CLI for the discovery check")
     parser.add_argument("--report", help="where to write the Markdown report")
+    parser.add_argument("--previous-zip", help="the previous released ZIP, to test a real upgrade and rollback")
     args = parser.parse_args()
     zip_path = Path(args.zip).resolve()
     pythons = args.python or [sys.executable]
@@ -91,7 +92,7 @@ def main():
                 "TESTING.md", "VERSION", "manifest.json", "install.sh", "verify.sh", "rollback.sh", "uninstall.sh",
                 "installer/cos_install.py", "installer/find_python.sh", "tests/run_all.sh", "payload/bin/cos",
                 "payload/core/AGENTS.core.md", "payload/lib/cos/cli.py", "payload/config/cos.config.example.json",
-                "payload/config/codex-mcp.example.toml", "payload/docs/FIRST_RUN.md", "payload/docs/CONNECTORS.md",
+                "payload/config/codex-config.example.toml", "payload/docs/FIRST_RUN.md", "payload/docs/CONNECTORS.md",
                 "payload/docs/ROUTINES.md", "payload/docs/STATE.md", "payload/docs/SKILLS_INDEX.md",
                 "payload/demo/walkthrough.sh", "payload/demo/fixtures/transcript.md", "payload/routines/morning.md",
                 "payload/routines/afternoon.md", "payload/routines/weekly.md", "payload/schemas/task.schema.json"]
@@ -156,10 +157,22 @@ def main():
         code, out, err = sh(["bash", "verify.sh"], cwd=pkg, env=env)
         record(area, "real Codex CLI (%s) loads AGENTS.md and all 10 skills" % codex_version,
                code == 0 and "[PASS] Codex loads AGENTS.md and all 10 skills" in out, (out + err)[-400:])
-        shutil.copyfile(str(ws / "config" / "codex-mcp.example.toml"), str(codex_home / "config.toml"))
-        code, out, err = sh([args.codex, "mcp", "list"], cwd=ws, env=env)
-        record(area, "config/codex-mcp.example.toml is accepted by %s (codex mcp list)" % codex_version,
-               code == 0 and "hubspot" in out and "gmail" in out, (out + err)[-300:])
+        # Strict parsing of the shipped example. The command stops at login afterwards, which is expected:
+        # what matters is whether the config loaded or was rejected.
+        example = (ws / "config" / "codex-config.example.toml").read_text()
+        (codex_home / "config.toml").write_text(example)
+        strict = [args.codex, "exec", "--strict-config", "--skip-git-repo-check", "ping"]
+        code, out, err = sh(strict, cwd=ws, env=env, timeout=120)
+        loaded = "Error loading config.toml" not in (out + err) and "OpenAI Codex" in (out + err)
+        record(area, "config/codex-config.example.toml passes strict config parsing in %s" % codex_version, loaded,
+               (out + err)[-300:])
+        (codex_home / "config.toml").write_text(example.replace('"writes"', '"sometimes"'))
+        code, out, err = sh(strict, cwd=ws, env=env, timeout=120)
+        record(area, "control: the same check rejects an invalid approval value",
+               "expected one of `auto`, `prompt`, `writes`, `approve`" in (out + err), (out + err)[-300:])
+        active = [line.strip() for line in example.splitlines() if line.strip() and not line.strip().startswith("#")]
+        record(area, "example config never sets approval to approve (which would run tools without asking)",
+               not any("approve" in line for line in active), "; ".join(active))
         (codex_home / "config.toml").unlink()
     else:
         codex_version = None
@@ -191,6 +204,59 @@ def main():
     record(area, "reinstall picks the preserved data back up", code == 0 and json.loads(out2)["count"] == 1)
     code, out, err = sh(["bash", "uninstall.sh", "--purge-data", "--yes"], cwd=pkg, env=env)
     record(area, "uninstall --purge-data --yes leaves nothing behind", code == 0 and not ws.exists() and list(home.iterdir()) == [])
+
+    # ------------------------------------------------------------ 4. upgrade from the previous released ZIP
+    if args.previous_zip:
+        prev_zip = Path(args.previous_zip).resolve()
+        prev_version = prev_zip.stem.rsplit("-", 1)[-1]
+        area = "Upgrade from released %s" % prev_version
+        prev_dir = work / "previous"
+        prev_dir.mkdir()
+        sh(["unzip", "-q", prev_zip, "-d", prev_dir])
+        prev_pkg = prev_dir / ("chief-of-staff-codex-%s" % prev_version)
+        home2 = work / "home-upgrade"
+        home2.mkdir()
+        env2 = clean_env(home2, {"CODEX_HOME": str(codex_home)})
+        if args.codex:
+            env2["PATH"] = str(Path(args.codex).absolute().parent) + os.pathsep + env2["PATH"]
+        ws2 = home2 / "ChiefOfStaff"
+        cos2 = ws2 / "bin" / "cos"
+        code, out, err = sh(["bash", "install.sh"], cwd=prev_pkg, env=env2)
+        record(area, "previous release %s installs" % prev_version, code == 0 and "health check: passed" in out, (out + err)[-300:])
+        sh([cos2, "config", "set", "timezone", "Australia/Perth"], cwd=ws2, env=env2)
+        sh([cos2, "task", "add", "--company", "Example", "--action", "Survive the upgrade", "--source-type", "user",
+            "--source-ref", "user:x", "--priority", "high", "--rationale", "r"], cwd=ws2, env=env2)
+        sh([cos2, "feedback", "add", "--type", "durable_preference", "--text", "From now on keep it short", "--standing"], cwd=ws2, env=env2)
+        sh([cos2, "rules", "propose", "--kind", "style", "--text", "Keep follow-up emails under 120 words.", "--reason",
+            "Asked for it", "--from", "F-0001"], cwd=ws2, env=env2)
+        before = {path.relative_to(ws2).as_posix(): path.read_bytes() for path in ws2.rglob("*")
+                  if path.is_file() and path.relative_to(ws2).as_posix().startswith(("data/", "config/cos.config.json"))
+                  and not path.name.endswith(".lock")}
+        code, out, err = sh(["bash", "install.sh"], cwd=pkg, env=env2)
+        record(area, "bash install.sh from %s upgrades in place" % version,
+               code == 0 and ("Upgraded chief of staff %s" % version) in out and ("from version %s" % prev_version) in out
+               and "health check: passed" in out, (out + err)[-400:])
+        after = {rel: (ws2 / rel).read_bytes() for rel in before if (ws2 / rel).exists()}
+        record(area, "data and config byte-identical after the upgrade (%d files)" % len(before), after == before)
+        agents2 = (ws2 / "AGENTS.md").read_text()
+        record(area, "AGENTS.md regenerated with the new version, the learned rule and the user's time zone",
+               ("package %s" % version) in agents2 and "Keep follow-up emails under 120 words." in agents2
+               and "Time zone: Australia/Perth" in agents2)
+        record(area, "file dropped by the new version removed, its replacement installed",
+               not (ws2 / "config" / "codex-mcp.example.toml").exists() and (ws2 / "config" / "codex-config.example.toml").exists())
+        code, out, err = sh(["bash", "verify.sh"] + ([] if args.codex else ["--no-codex"]), cwd=pkg, env=env2)
+        record(area, "bash verify.sh passes after the upgrade", code == 0 and "RESULT: PASSED" in out, (out + err)[-300:])
+        code, out, err = sh(["bash", "rollback.sh"], cwd=pkg, env=env2)
+        code2, out2, _ = sh([cos2, "version"], cwd=ws2, env=env2)
+        code3, out3, _ = sh([cos2, "task", "list"], cwd=ws2, env=env2)
+        record(area, "bash rollback.sh returns to %s and keeps the data" % prev_version,
+               code == 0 and json.loads(out2)["version"] == prev_version and json.loads(out3)["count"] == 1
+               and (ws2 / "config" / "codex-mcp.example.toml").exists(), (out + err)[-300:])
+        code, out, err = sh(["bash", "install.sh"], cwd=pkg, env=env2)
+        code2, out2, _ = sh([cos2, "version"], cwd=ws2, env=env2)
+        record(area, "upgrade again after the rollback", code == 0 and json.loads(out2)["version"] == version)
+    else:
+        record("Upgrade from a released version", "upgrade from the previous released ZIP", "UNTESTED", "no --previous-zip given")
 
     # ------------------------------------------------------------ report
     failed = [item for item in RESULTS if item[2] == "FAIL"]
